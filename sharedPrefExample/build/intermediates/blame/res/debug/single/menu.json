@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\Android  Projects\\Prefrences\\sharedPrefExample\\build\\intermediates\\res\\merged\\debug\\menu\\activity_main.xml",
+        "source": "D:\\Android  Projects\\Prefrences\\sharedPrefExample\\src\\main\\res\\menu\\activity_main.xml"
+    },
+    {
+        "merged": "D:\\Android  Projects\\Prefrences\\sharedPrefExample\\build\\intermediates\\res\\merged\\debug\\menu\\activity_target.xml",
+        "source": "D:\\Android  Projects\\Prefrences\\sharedPrefExample\\src\\main\\res\\menu\\activity_target.xml"
+    }
+]

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory
+        android:summary="Username and password information"
+        android:title="@string/pref_title_secure_setting">>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="FingerPrintKey"
+            android:title="Finger Print" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="PinCodeKey"
+            android:title="Pin Code"
+            tools:targetApi="jelly_bean_mr1" />
+
+        <!--        android:layout="?android:preferenceLayoutChild"-->
+
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/pinCodeTitleTxt"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center|top"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:maxLines="3"
+        android:padding="40dp"
+        android:text="برای تنظیم ورود به اپلیکیشن از طریق پین کد، میتوانید یک پین کد چهار رقمی تنظیم کنید ."
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etPinCodeFirstTxt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="#" />
+
+        <EditText
+            android:id="@+id/etPinCodeSecondTxt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="#" />
+
+        <EditText
+            android:id="@+id/etPinCodeThirdTxt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="#" />
+
+        <EditText
+            android:id="@+id/etPinCodeFourthTxt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="#" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/pinCodeInsertBtn"
+        android:onClick="onClick"
+        android:layout_width="150dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="ثبت" />
+
+    <Button
+        android:onClick="onClick"
+        android:id="@+id/pinCodeCancelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="نمی خواهم" />
+</LinearLayout>
