@@ -38,22 +38,22 @@ import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 
 public class MainActivity extends AccountAuthenticatorActivity implements IFingerPrintHandlerView {
 
     public final static int VALIDATION_FINGERPRINT_REQUEST_CODE = 2;
-    // Variable used for storing the key in the Android Keystore container
     private static final String KEY_NAME = "androidHive";
-    private FragmentManager fm;
     private KeyStore keyStore;
     private Cipher cipher;
     private FingerPrintFragment fingerPrintFragment;
-    private FragmentTransaction transaction;
 
     private AccountManager mAccountManager;
     private boolean isAccountExist = true;
@@ -61,6 +61,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
     private String authTokenType;
     private String password;
     private Bundle userData;
+    private SecretKey secretKey;
 
 
     @Override
@@ -70,13 +71,13 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
         fingerPrintFragment = new FingerPrintFragment();
 
-        fm = getFragmentManager();
-        transaction = fm.beginTransaction();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.outputFragment, fingerPrintFragment);
         transaction.commit();
 
-
         mAccountManager = AccountManager.get(getBaseContext());
+
 
         if (mAccountManager.getAccounts().length == 0) {
 
@@ -112,7 +113,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                 finish();
 
             } else {
-                //is not added ,guess not
+
                 Log.d("Logw", "Account NOT added");
             }
 
@@ -124,10 +125,11 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
 
     private void fingerPringStuff() {
+
+
         // Initializing both Android Keyguard Manager and Fingerprint Manager
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
-
 
         // Check whether the device has a Fingerprint sensor.
         if (!fingerprintManager.isHardwareDetected()) {
@@ -140,17 +142,29 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
              * startActivity(intent);
              */
             // textView.setText("Your Device does not have a Fingerprint Sensor");
+            Log.i("Log", "fingerPringStuff: ");
         } else {
+            Log.i("Log", "fingerPringStuff: ");
+
             // Checks whether fingerprint permission is set on manifest
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                Log.i("Log", "fingerPringStuff: ");
                 // textView.setText("Fingerprint authentication permission not enabled");
             } else {
+                Log.i("Log", "fingerPringStuff: ");
+
                 // Check whether at least one fingerprint is registered
                 if (!fingerprintManager.hasEnrolledFingerprints()) {
+                    Log.i("Log", "fingerPringStuff: ");
+
                     //  textView.setText("Register at least one fingerprint in Settings");
                 } else {
+                    Log.i("Log", "fingerPringStuff: ");
+
                     // Checks whether lock screen security is enabled or not
                     if (!keyguardManager.isKeyguardSecure()) {
+                        Log.i("Log", "fingerPringStuff: ");
+
                         //   textView.setText("Lock screen security not enabled in Settings");
                     } else {
                         generateKey();
@@ -206,6 +220,8 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                             KeyProperties.ENCRYPTION_PADDING_PKCS7)
                     .build());
             keyGenerator.generateKey();
+
+
         } catch (NoSuchAlgorithmException |
                 InvalidAlgorithmParameterException
                 | CertificateException | IOException e) {
@@ -225,9 +241,9 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
         try {
             keyStore.load(null);
-            SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            return true;
+            secretKey = (SecretKey) keyStore.getKey(KEY_NAME, null);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+
         } catch (KeyPermanentlyInvalidatedException e) {
             return false;
         } catch (InvalidKeyException e) {
@@ -235,7 +251,56 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException e) {
             throw new RuntimeException("Failed to init Cipher", e);
         }
-        return false;
+
+
+        String strDataToEncrypt = "1234 ";
+        byte[] byteDataToEncrypt = strDataToEncrypt.getBytes();
+        byte[] byteCipherText = new byte[0];
+        try {
+            byteCipherText = cipher.doFinal(byteDataToEncrypt);
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+
+        final int AES_KEYLENGTH = 128;    // change this as desired for the security level you want
+        byte[] iv = new byte[AES_KEYLENGTH / 8];    // Save the IV bytes or send it in plaintext with the encrypted data so you can decrypt the data later
+
+
+        Cipher aesCipherForDecryption = null; // Must specify the mode explicitly as most JCE providers default to ECB mode!!
+        try {
+            aesCipherForDecryption = Cipher.getInstance("AES/CBC/PKCS7PADDING");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            aesCipherForDecryption.init(Cipher.DECRYPT_MODE, secretKey,
+                    new IvParameterSpec(iv));
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+
+        byte[] byteDecryptedText = new byte[0];
+        try {
+            byteDecryptedText = aesCipherForDecryption
+                    .doFinal(byteCipherText);
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+        String strDecryptedText = new String(byteDecryptedText);
+
+
+        return true;
+
+
     }
 
     public void onClick(View view) {
