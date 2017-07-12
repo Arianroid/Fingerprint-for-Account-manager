@@ -15,7 +15,10 @@
     <string name="title_activity_home">Fingerprint</string>
     <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
     <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
-
+    <string name="fingerPrintButtonTitle">ورود با شناسه کاربری و رمز عبور</string>
+    <string name="fingerPrintTitleFragment">اثر انگشت شما یافت نشد لطفا انگشت خود را مجددا روی سنسور قرار دهید .</string>
+    <string name="fingerPrintCancelButtonTitle">نمی خواهم</string>
+    <string name="fingerPrintTitleExceptionFragment">برای تنظیم ورود به اپلیکیشن از طریق اثر انگشت، انگشت خود را بروی سنسور گوشی قرار دهید .</string>
 
 
 </resources>

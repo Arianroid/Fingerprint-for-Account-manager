@@ -274,6 +274,6 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
     @Override
     public void showCompletedMessage() {
         userSignIn();
-        fingerPrintFragment.showCompletedMessage();
+        fingerPrintFragment.doLogin();
     }
 }

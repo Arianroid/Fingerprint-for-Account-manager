@@ -22,12 +22,11 @@ public class FingerPrintFragment extends Fragment implements IFingerPrintFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.finger_print_layout, container, false);
-        fingerprintBtn = (Button) view.findViewById(R.id.fingerPrintBtn);
 
+        fingerprintBtn = (Button) view.findViewById(R.id.fingerPrintBtn);
+        titleTextView = (TextView) view.findViewById(R.id.fingerPrintTitleTxt);
         alertImageView = (ImageView) view.findViewById(R.id.alertRedIconImg);
         alertImageView.setVisibility(View.INVISIBLE);
-
-        titleTextView = (TextView) view.findViewById(R.id.fingerPrintTitleTxt);
 
         return view;
     }
@@ -35,15 +34,15 @@ public class FingerPrintFragment extends Fragment implements IFingerPrintFragmen
 
     @Override
     public void showErrorMessage() {
-                fingerprintBtn.setText(" ورود با نام کاربری و رمز عبور ");
-               alertImageView.setVisibility(View.VISIBLE);
-                titleTextView.setText("اثر انگشت شما یافت نشد لطفا انگشت خود را مجددا روی سنسور قرار دهید .");
+        fingerprintBtn.setText(R.string.fingerPrintButtonTitle);
+        titleTextView.setText(R.string.fingerPrintTitleFragment);
+        alertImageView.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showCompletedMessage() {
-                fingerprintBtn.setText(" نمی خواهم ");
-                alertImageView.setVisibility(View.INVISIBLE);
-                titleTextView.setText("برای تنظیم ورود به اپلیکیشن از طریق اثر انگشت، انگشت خود را بروی سنسور گوشی قرار دهید .");
+    public void doLogin() {
+        fingerprintBtn.setText(R.string.fingerPrintCancelButtonTitle);
+        titleTextView.setText(R.string.fingerPrintTitleExceptionFragment);
+        alertImageView.setVisibility(View.INVISIBLE);
     }
 }
