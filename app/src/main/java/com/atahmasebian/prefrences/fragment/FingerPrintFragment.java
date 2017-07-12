@@ -14,7 +14,6 @@ import com.atahmasebian.prefrences.R;
 
 
 public class FingerPrintFragment extends Fragment implements IFingerPrintFragment {
-    public final int CANCEL_FINGERPRINT_REQUEST_CODE = 1;
     Button fingerprintBtn;
     private ImageView alertImageView;
     private TextView titleTextView;
@@ -29,8 +28,6 @@ public class FingerPrintFragment extends Fragment implements IFingerPrintFragmen
         alertImageView.setVisibility(View.INVISIBLE);
 
         titleTextView = (TextView) view.findViewById(R.id.fingerPrintTitleTxt);
-        titleTextView.setText("برای تنظیم ورود به اپلیکیشن از طریق اثر انگشت، انگشت خود را بروی سنسور گوشی قرار دهید .");
-
 
         return view;
     }

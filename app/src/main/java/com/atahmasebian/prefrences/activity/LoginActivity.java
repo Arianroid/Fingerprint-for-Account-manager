@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.atahmasebian.prefrences.R;
 import com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag;
-import com.atahmasebian.prefrences.accountAuthentication.AsaTraderAccount;
 
 public class LoginActivity extends AppCompatActivity {
     EditText etUsername, etPassword;

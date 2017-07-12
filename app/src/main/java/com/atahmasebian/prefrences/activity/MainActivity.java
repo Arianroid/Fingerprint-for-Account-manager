@@ -24,7 +24,6 @@ import android.view.View;
 
 import com.atahmasebian.prefrences.R;
 import com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag;
-import com.atahmasebian.prefrences.accountAuthentication.AsaTraderAccount;
 import com.atahmasebian.prefrences.fingerPrintUtility.FingerprintHandler;
 import com.atahmasebian.prefrences.fingerPrintUtility.IFingerPrintHandlerView;
 import com.atahmasebian.prefrences.fragment.FingerPrintFragment;
@@ -57,7 +56,6 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
     private FragmentTransaction transaction;
 
     private AccountManager mAccountManager;
-    private AsaTraderAccount account;
     private boolean isAccountExist = true;
     private String username;
     private String authTokenType;
@@ -275,9 +273,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
     @Override
     public void showCompletedMessage() {
-        if (account == null) {
-            userSignIn();
-        }
+        userSignIn();
         fingerPrintFragment.showCompletedMessage();
     }
 }
