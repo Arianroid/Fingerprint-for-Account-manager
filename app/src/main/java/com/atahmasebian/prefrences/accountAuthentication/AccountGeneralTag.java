@@ -5,6 +5,7 @@ public class AccountGeneralTag {
 
 
     public static final String ACCOUNT_NAME = "CoderzHeaven";
+    public static final String ACCOUNT_DTO = "ACCOUNT_DTO";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
     public final static String PARAM_USER_PASS = "USER_PASS";

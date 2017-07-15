@@ -19,7 +19,7 @@ public class AuthenticatorService extends Service {
         return ret;
     }
 
-    private AuthenticatorTools getAuthenticatorTools() {
+    public AuthenticatorTools getAuthenticatorTools() {
         if (authenticatorTools == null) {
             authenticatorTools = new AuthenticatorTools(this);
         }
