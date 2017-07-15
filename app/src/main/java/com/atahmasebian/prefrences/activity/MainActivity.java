@@ -62,6 +62,8 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
     private String password;
     private Bundle userData;
     private SecretKey secretKey;
+    private byte[] iv;
+    private byte[] byteCipherText;
 
 
     @Override
@@ -103,7 +105,6 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         if (!isAccountExist) {
             final Account account = new Account(username, authTokenType);
 
-
             if (mAccountManager.addAccountExplicitly(account, password, userData)) {
 
                 Intent intent = new Intent();
@@ -133,37 +134,24 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
         // Check whether the device has a Fingerprint sensor.
         if (!fingerprintManager.isHardwareDetected()) {
-            /**
-             * An error message will be displayed if the device does not contain the fingerprint hardware.
-             * However if you plan to implement a default authentication method,
-             * you can redirect the user to a default authentication activity from here.
-             * Example:
-             * Intent intent = new Intent(this, DefaultAuthenticationActivity.class);
-             * startActivity(intent);
-             */
-            // textView.setText("Your Device does not have a Fingerprint Sensor");
-            Log.i("Log", "fingerPringStuff: ");
+
+            //device does not support fingerPrint Hardware
         } else {
-            Log.i("Log", "fingerPringStuff: ");
 
             // Checks whether fingerprint permission is set on manifest
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-                Log.i("Log", "fingerPringStuff: ");
+
                 // textView.setText("Fingerprint authentication permission not enabled");
             } else {
-                Log.i("Log", "fingerPringStuff: ");
 
                 // Check whether at least one fingerprint is registered
                 if (!fingerprintManager.hasEnrolledFingerprints()) {
-                    Log.i("Log", "fingerPringStuff: ");
 
                     //  textView.setText("Register at least one fingerprint in Settings");
                 } else {
-                    Log.i("Log", "fingerPringStuff: ");
 
                     // Checks whether lock screen security is enabled or not
                     if (!keyguardManager.isKeyguardSecure()) {
-                        Log.i("Log", "fingerPringStuff: ");
 
                         //   textView.setText("Lock screen security not enabled in Settings");
                     } else {
@@ -246,60 +234,50 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
         } catch (KeyPermanentlyInvalidatedException e) {
             return false;
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException e) {
+        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException("Failed to init Cipher", e);
         }
 
-
-        String strDataToEncrypt = "1234 ";
-        byte[] byteDataToEncrypt = strDataToEncrypt.getBytes();
-        byte[] byteCipherText = new byte[0];
         try {
-            byteCipherText = cipher.doFinal(byteDataToEncrypt);
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        }
-
-        final int AES_KEYLENGTH = 128;    // change this as desired for the security level you want
-        byte[] iv = new byte[AES_KEYLENGTH / 8];    // Save the IV bytes or send it in plaintext with the encrypted data so you can decrypt the data later
-
-
-        Cipher aesCipherForDecryption = null; // Must specify the mode explicitly as most JCE providers default to ECB mode!!
-        try {
-            aesCipherForDecryption = Cipher.getInstance("AES/CBC/PKCS7PADDING");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
+            encryptData();
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
 
         try {
-            aesCipherForDecryption.init(Cipher.DECRYPT_MODE, secretKey,
-                    new IvParameterSpec(iv));
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+            decryptData();
+        } catch (InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-        byte[] byteDecryptedText = new byte[0];
-        try {
-            byteDecryptedText = aesCipherForDecryption
-                    .doFinal(byteCipherText);
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        }
-        String strDecryptedText = new String(byteDecryptedText);
 
 
         return true;
 
+
+    }
+
+    private String decryptData() throws InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException {
+        Cipher aesCipherForDecryption = null; // Must specify the mode explicitly as most JCE providers default to ECB mode!!
+        aesCipherForDecryption = Cipher.getInstance("AES/CBC/PKCS7PADDING");
+
+        aesCipherForDecryption.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+
+        byte[] byteDecryptedText = new byte[0];
+        byteDecryptedText = aesCipherForDecryption.doFinal(byteCipherText);
+        String strDecryptedText = new String(byteDecryptedText);
+
+        return strDecryptedText;
+    }
+
+    private void encryptData() throws BadPaddingException, IllegalBlockSizeException {
+
+        //added pin code encryption
+        String strDataToEncrypt = "1234 ";
+        byte[] byteDataToEncrypt = strDataToEncrypt.getBytes();
+        byteCipherText = new byte[0];
+        byteCipherText = cipher.doFinal(byteDataToEncrypt);
+        final int AES_KEYLENGTH = 128;    // change this as desired for the security level you want
+        iv = new byte[AES_KEYLENGTH / 8];    // Save the IV bytes or send it in plaintext with the encrypted data so you can decrypt the data later
 
     }
 
