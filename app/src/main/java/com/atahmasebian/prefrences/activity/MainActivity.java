@@ -58,21 +58,22 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
     private Cipher cipher;
     private FingerPrintFragment fingerPrintFragment;
 
-    private AccountManager mAccountManager;
+    public static AccountManager mAccountManager;
     private boolean isAccountExist = true;
     private String username;
     private String authTokenType;
     private String password;
-    private Bundle userData = new Bundle();
+    private static  Bundle userData = new Bundle();
     private SecretKey secretKey;
     private byte[] iv;
     private byte[] byteCipherText;
     private FragmentTransaction transaction;
     private FragmentManager fm;
-    private InsertInsertPinCodeFragment insertPinCodeFragment;
-    private ConfirmPinCodeFragmentPinCode confirmPinCodeFragment;
+    public static   InsertInsertPinCodeFragment insertPinCodeFragment;
+    public static  ConfirmPinCodeFragmentPinCode confirmPinCodeFragment;
     private String pinCode;
     private Account account;
+    public static Account staticAccount;
 
 
     @Override
@@ -108,6 +109,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                 authTokenType = getIntent().getStringExtra(AccountGeneralTag.ARG_AUTH_TYPE);
                 account =findAccount();
             }
+            staticAccount = account;
             username = account.name;
             password = mAccountManager.getPassword(account);
             userData.putString("PinCode", mAccountManager.getUserData(account, "PinCode"));
@@ -139,7 +141,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         if (!isAccountExist) {
 
             account = new Account(username, authTokenType);
-
+            mAccountManager.setUserData(account,"PinCode",userData.getString("PinCode"));
             if (mAccountManager.addAccountExplicitly(account, password, userData)) {
                 Intent intent = new Intent();
                 intent.putExtras(getIntent().getExtras());
@@ -176,6 +178,8 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                 transaction = fm.beginTransaction();
                 transaction.replace(R.id.outputFragment, confirmPinCodeFragment);
                 transaction.commit();
+                userData.putString("PinCode", insertPinCodeFragment.getPinCode());
+
                 break;
             case R.id.confirmBtn:
                 //set pin code user data to bundle AM
@@ -189,11 +193,14 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
     }
 
-    private boolean isPinCodeConfirm() {
+    public static boolean isPinCodeConfirm() {
 
         String pinCode = userData.getString("PinCode");
-        if (pinCode == null) {
+        if (pinCode==null) {
             pinCode = insertPinCodeFragment.getPinCode();
+        }
+        if (pinCode.isEmpty()){
+            pinCode  = mAccountManager.getUserData(staticAccount,"PinCode");
         }
         String confirmPinCode = confirmPinCodeFragment.getConfirmPinCode();
 

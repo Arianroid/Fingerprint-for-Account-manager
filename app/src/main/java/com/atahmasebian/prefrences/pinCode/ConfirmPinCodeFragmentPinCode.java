@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atahmasebian.prefrences.R;
+import com.atahmasebian.prefrences.activity.MainActivity;
 
 public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmPinCodeView {
 
@@ -116,7 +117,9 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() > 0) {
-                Toast.makeText(getActivity(), "doLogin", Toast.LENGTH_SHORT).show();
+                if (!MainActivity.isPinCodeConfirm()) {
+                    showExceptionLayout();
+                }
             }
         }
 
@@ -166,6 +169,12 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
     @Override
     public String getConfirmPinCode() {
         return combinedPinCodeValue();
+
+    }
+
+    @Override
+    public void showExceptionLayout() {
+        title.setText("پین را اشتباه وارد کردید لطفا پین را صحیح وارد نمایید .");
 
     }
 
