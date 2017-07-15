@@ -24,9 +24,9 @@ import android.widget.Toast;
 
 import com.atahmasebian.prefrences.R;
 import com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag;
+import com.atahmasebian.prefrences.fingerPrintUtility.FingerPrintFragment;
 import com.atahmasebian.prefrences.fingerPrintUtility.FingerprintHandler;
 import com.atahmasebian.prefrences.fingerPrintUtility.IFingerPrintHandlerView;
-import com.atahmasebian.prefrences.fingerPrintUtility.FingerPrintFragment;
 import com.atahmasebian.prefrences.pinCode.ConfirmPinCodeFragmentPinCode;
 import com.atahmasebian.prefrences.pinCode.InsertInsertPinCodeFragment;
 
@@ -52,8 +52,8 @@ import javax.crypto.spec.IvParameterSpec;
 public class MainActivity extends AccountAuthenticatorActivity implements IFingerPrintHandlerView {
 
     public final static int VALIDATION_FINGERPRINT_REQUEST_CODE = 2;
-    public final int VALIDATION_PinCode_REQUEST_CODE = 3;
     private static final String KEY_NAME = "androidHive";
+    public final int VALIDATION_PinCode_REQUEST_CODE = 3;
     private KeyStore keyStore;
     private Cipher cipher;
     private FingerPrintFragment fingerPrintFragment;
@@ -104,6 +104,10 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         } else {
             // AM ready for login with pin code
             account = getIntent().getParcelableExtra(AccountGeneralTag.ACCOUNT_DTO);
+            if (account==null){
+                authTokenType = getIntent().getStringExtra(AccountGeneralTag.ARG_AUTH_TYPE);
+                account =findAccount();
+            }
             username = account.name;
             password = mAccountManager.getPassword(account);
             userData.putString("PinCode", mAccountManager.getUserData(account, "PinCode"));
@@ -112,18 +116,24 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
         }
 
-        if (account!=null){
+        if (account != null) {
             //login page with pinCode ui
-           transaction = fm.beginTransaction();
+            transaction = fm.beginTransaction();
             transaction.replace(R.id.outputFragment, confirmPinCodeFragment);
             transaction.commit();
             confirmPinCodeFragment.setShownConfirmLayout(false);
         }
 
 
-
     }
-
+    public Account findAccount() {
+        for (Account savedAccount : mAccountManager.getAccounts()) {
+            if (TextUtils.equals(savedAccount.type, authTokenType)) {
+                return savedAccount;
+            }
+        }
+        return null;
+    }
     void userSignIn() {
 
         if (!isAccountExist) {
@@ -171,7 +181,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                 //set pin code user data to bundle AM
                 if (isPinCodeConfirm()) {
                     userSignIn();
-                }else {
+                } else {
                     Toast.makeText(this, "pin code is not equal", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -179,14 +189,18 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
     }
 
-    private boolean isPinCodeConfirm(){
+    private boolean isPinCodeConfirm() {
 
         String pinCode = userData.getString("PinCode");
+        if (pinCode == null) {
+            pinCode = insertPinCodeFragment.getPinCode();
+        }
         String confirmPinCode = confirmPinCodeFragment.getConfirmPinCode();
 
         boolean isValid = pinCode.equals(confirmPinCode);
         return isValid;
     }
+
     private void fingerPringStuff() {
 
 

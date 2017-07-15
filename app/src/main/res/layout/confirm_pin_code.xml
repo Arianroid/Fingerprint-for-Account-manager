@@ -24,23 +24,23 @@
         <EditText
             android:id="@+id/confirmFirstEditText"
             android:layout_width="0dp"
-            android:imeOptions="actionGo"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:hint="#"
+            android:imeOptions="actionGo"
             android:maxLength="1" />
 
         <EditText
             android:id="@+id/confirmSecondEditText"
             android:layout_width="0dp"
-            android:imeOptions="actionGo"
-
-
             android:layout_height="match_parent"
+
+
             android:layout_weight="1"
             android:gravity="center"
             android:hint="#"
+            android:imeOptions="actionGo"
             android:maxLength="1" />
 
         <EditText
@@ -48,10 +48,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:imeOptions="actionGo"
-
             android:gravity="center"
+
             android:hint="#"
+            android:imeOptions="actionGo"
             android:maxLength="1" />
 
         <EditText
@@ -59,10 +59,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:imeOptions="actionGo"
-
             android:gravity="center"
+
             android:hint="#"
+            android:imeOptions="actionGo"
             android:maxLength="1" />
     </LinearLayout>
 

@@ -23,56 +23,64 @@
 
         <EditText
             android:id="@+id/etPinCodeFirstTxt"
-            android:inputType="number"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="#" />
+            android:hint="#"
+            android:imeOptions="actionGo"
+            android:inputType="number"
+            android:maxLength="1" />
 
         <EditText
             android:id="@+id/etPinCodeSecondTxt"
-            android:inputType="number"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="#" />
+            android:hint="#"
+            android:imeOptions="actionGo"
+            android:inputType="number"
+            android:maxLength="1" />
 
         <EditText
             android:id="@+id/etPinCodeThirdTxt"
-            android:inputType="number"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="#" />
+            android:hint="#"
+            android:imeOptions="actionGo"
+            android:inputType="number"
+            android:maxLength="1" />
 
         <EditText
             android:id="@+id/etPinCodeFourthTxt"
             android:layout_width="0dp"
-            android:inputType="number"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="#" />
+            android:hint="#"
+            android:imeOptions="actionGo"
+            android:inputType="number"
+            android:maxLength="1" />
     </LinearLayout>
 
     <Button
         android:id="@+id/pinCodeInsertBtn"
-        android:onClick="onClick"
         android:layout_width="150dp"
-        android:gravity="center"
-        android:layout_gravity="center"
         android:layout_height="0dp"
+        android:layout_gravity="center"
         android:layout_weight="1"
+        android:gravity="center"
+        android:onClick="onClick"
         android:text="ثبت" />
 
     <Button
-        android:onClick="onClick"
         android:id="@+id/pinCodeCancelBtn"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:onClick="onClick"
         android:text="نمی خواهم" />
 </LinearLayout>

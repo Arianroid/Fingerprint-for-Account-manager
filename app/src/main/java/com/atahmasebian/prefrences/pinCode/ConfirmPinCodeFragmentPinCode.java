@@ -58,7 +58,9 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
 
         @Override
         public void afterTextChanged(Editable s) {
-            firstEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            if (s.length() > 0) {
+                firstEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            }
         }
 
     };
@@ -75,7 +77,9 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
 
         @Override
         public void afterTextChanged(Editable s) {
-            secondEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            if (s.length() > 0) {
+                secondEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            }
         }
 
     };
@@ -92,7 +96,9 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
 
         @Override
         public void afterTextChanged(Editable s) {
-            thirdEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            if (s.length() > 0) {
+                thirdEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            }
         }
 
     };
@@ -109,8 +115,9 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
 
         @Override
         public void afterTextChanged(Editable s) {
-
-            Toast.makeText(getActivity(), "doLogin", Toast.LENGTH_SHORT).show();
+            if (s.length() > 0) {
+                Toast.makeText(getActivity(), "doLogin", Toast.LENGTH_SHORT).show();
+            }
         }
 
     };
