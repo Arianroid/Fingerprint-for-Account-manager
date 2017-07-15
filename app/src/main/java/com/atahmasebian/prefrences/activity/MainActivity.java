@@ -27,6 +27,7 @@ import com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag;
 import com.atahmasebian.prefrences.fingerPrintUtility.FingerprintHandler;
 import com.atahmasebian.prefrences.fingerPrintUtility.IFingerPrintHandlerView;
 import com.atahmasebian.prefrences.fragment.FingerPrintFragment;
+import com.atahmasebian.prefrences.fragment.PinCodeFragment;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -64,6 +65,9 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
     private SecretKey secretKey;
     private byte[] iv;
     private byte[] byteCipherText;
+    private FragmentTransaction transaction;
+    private FragmentManager fm;
+    private PinCodeFragment pinCodeFragment;
 
 
     @Override
@@ -72,11 +76,11 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         setContentView(R.layout.security_feature_main_layout);
 
         fingerPrintFragment = new FingerPrintFragment();
+        pinCodeFragment = new PinCodeFragment();
 
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.outputFragment, fingerPrintFragment);
-        transaction.commit();
+        fm = getFragmentManager();
+        transaction = fm.beginTransaction();
+
 
         mAccountManager = AccountManager.get(getBaseContext());
 
@@ -132,11 +136,15 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
 
-        // Check whether the device has a Fingerprint sensor.
+        //Device does not support fingerPrint Hardware
         if (!fingerprintManager.isHardwareDetected()) {
 
-            //device does not support fingerPrint Hardware
+            transaction.replace(R.id.outputFragment, pinCodeFragment);
+
         } else {
+            //Device Has fingerPrint Hardware
+
+            transaction.replace(R.id.outputFragment, fingerPrintFragment);
 
             // Checks whether fingerprint permission is set on manifest
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
@@ -146,6 +154,8 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
                 // Check whether at least one fingerprint is registered
                 if (!fingerprintManager.hasEnrolledFingerprints()) {
+                    transaction = fm.beginTransaction();
+                    transaction.replace(R.id.outputFragment, pinCodeFragment);
 
                     //  textView.setText("Register at least one fingerprint in Settings");
                 } else {
@@ -167,6 +177,9 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                 }
             }
         }
+
+        transaction.commit();
+
     }
 
     public boolean findAccount(String accountName) {
