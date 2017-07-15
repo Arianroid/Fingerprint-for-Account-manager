@@ -19,6 +19,8 @@ import android.security.keystore.KeyProperties;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.atahmasebian.prefrences.fingerPrintUtility.FingerprintHandler;
 import com.atahmasebian.prefrences.fingerPrintUtility.IFingerPrintHandlerView;
 import com.atahmasebian.prefrences.pinCode.ConfirmPinCodeFragmentPinCode;
 import com.atahmasebian.prefrences.pinCode.InsertInsertPinCodeFragment;
+import com.atahmasebian.prefrences.preference.PreferencesSettingsActivity;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -53,28 +56,41 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
     public final static int VALIDATION_FINGERPRINT_REQUEST_CODE = 2;
     private static final String KEY_NAME = "androidHive";
+    public static AccountManager mAccountManager;
+    public static InsertInsertPinCodeFragment insertPinCodeFragment;
+    public static ConfirmPinCodeFragmentPinCode confirmPinCodeFragment;
+    public static Account staticAccount;
+    private static Bundle userData = new Bundle();
     public final int VALIDATION_PinCode_REQUEST_CODE = 3;
     private KeyStore keyStore;
     private Cipher cipher;
     private FingerPrintFragment fingerPrintFragment;
-
-    public static AccountManager mAccountManager;
     private boolean isAccountExist = true;
     private String username;
     private String authTokenType;
     private String password;
-    private static  Bundle userData = new Bundle();
     private SecretKey secretKey;
     private byte[] iv;
     private byte[] byteCipherText;
     private FragmentTransaction transaction;
     private FragmentManager fm;
-    public static   InsertInsertPinCodeFragment insertPinCodeFragment;
-    public static  ConfirmPinCodeFragmentPinCode confirmPinCodeFragment;
     private String pinCode;
     private Account account;
-    public static Account staticAccount;
 
+    public static boolean isPinCodeConfirm() {
+
+        String pinCode = userData.getString("PinCode");
+        if (pinCode == null) {
+            pinCode = insertPinCodeFragment.getPinCode();
+        }
+        if (pinCode.isEmpty()) {
+            pinCode = mAccountManager.getUserData(staticAccount, "PinCode");
+        }
+        String confirmPinCode = confirmPinCodeFragment.getConfirmPinCode();
+
+        boolean isValid = pinCode.equals(confirmPinCode);
+        return isValid;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,9 +121,9 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         } else {
             // AM ready for login with pin code
             account = getIntent().getParcelableExtra(AccountGeneralTag.ACCOUNT_DTO);
-            if (account==null){
+            if (account == null) {
                 authTokenType = getIntent().getStringExtra(AccountGeneralTag.ARG_AUTH_TYPE);
-                account =findAccount();
+                account = findAccount();
             }
             staticAccount = account;
             username = account.name;
@@ -128,6 +144,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
 
     }
+
     public Account findAccount() {
         for (Account savedAccount : mAccountManager.getAccounts()) {
             if (TextUtils.equals(savedAccount.type, authTokenType)) {
@@ -136,12 +153,13 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         }
         return null;
     }
+
     void userSignIn() {
 
         if (!isAccountExist) {
 
             account = new Account(username, authTokenType);
-            mAccountManager.setUserData(account,"PinCode",userData.getString("PinCode"));
+            mAccountManager.setUserData(account, "PinCode", userData.getString("PinCode"));
             if (mAccountManager.addAccountExplicitly(account, password, userData)) {
                 Intent intent = new Intent();
                 intent.putExtras(getIntent().getExtras());
@@ -159,7 +177,6 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
         }
 
     }
-
 
     public void onClick(View view) {
         int id = view.getId();
@@ -191,21 +208,6 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                 break;
         }
 
-    }
-
-    public static boolean isPinCodeConfirm() {
-
-        String pinCode = userData.getString("PinCode");
-        if (pinCode==null) {
-            pinCode = insertPinCodeFragment.getPinCode();
-        }
-        if (pinCode.isEmpty()){
-            pinCode  = mAccountManager.getUserData(staticAccount,"PinCode");
-        }
-        String confirmPinCode = confirmPinCodeFragment.getConfirmPinCode();
-
-        boolean isValid = pinCode.equals(confirmPinCode);
-        return isValid;
     }
 
     private void fingerPringStuff() {

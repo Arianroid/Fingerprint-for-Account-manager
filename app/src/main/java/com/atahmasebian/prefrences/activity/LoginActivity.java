@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.atahmasebian.prefrences.R;
 import com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag;
+import com.atahmasebian.prefrences.preference.PreferencesSettingsActivity;
 
 import static com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag.ACCOUNT_DTO;
 
@@ -74,6 +77,21 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.more) {
+            startActivity(new Intent(this, PreferencesSettingsActivity.class));
+
+        }
+        return true;
     }
 
     public Account findAccount() {

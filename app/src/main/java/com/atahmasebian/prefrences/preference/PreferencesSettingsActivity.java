@@ -10,8 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 
 import com.atahmasebian.prefrences.R;
-import com.atahmasebian.prefrences.preference.AbstractPreferenceActivity;
-import com.atahmasebian.prefrences.preference.SecuritySettingPreferenceFragment;
 
 import java.util.List;
 
