@@ -23,6 +23,7 @@
 
         <EditText
             android:id="@+id/etPinCodeFirstTxt"
+            android:inputType="number"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -31,6 +32,7 @@
 
         <EditText
             android:id="@+id/etPinCodeSecondTxt"
+            android:inputType="number"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -39,6 +41,7 @@
 
         <EditText
             android:id="@+id/etPinCodeThirdTxt"
+            android:inputType="number"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -48,6 +51,7 @@
         <EditText
             android:id="@+id/etPinCodeFourthTxt"
             android:layout_width="0dp"
+            android:inputType="number"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
