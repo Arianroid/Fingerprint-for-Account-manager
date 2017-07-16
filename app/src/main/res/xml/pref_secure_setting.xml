@@ -8,12 +8,10 @@
         android:title="@string/pref_title_secure_setting">>
 
         <CheckBoxPreference
-            android:defaultValue="false"
             android:key="FingerPrintKey"
             android:title="Finger Print" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
             android:key="PinCodeKey"
             android:title="Pin Code"
             tools:targetApi="jelly_bean_mr1" />

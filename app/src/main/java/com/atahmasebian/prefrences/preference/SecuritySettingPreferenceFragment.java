@@ -2,10 +2,14 @@ package com.atahmasebian.prefrences.preference;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.atahmasebian.prefrences.Hi;
 import com.atahmasebian.prefrences.R;
 
 
@@ -17,8 +21,46 @@ public class SecuritySettingPreferenceFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_secure_setting);
         setHasOptionsMenu(true);
 
-        PreferencesSettingsActivity.bindPreferenceSummaryToValue(findPreference("FingerPrintKey"));
-        PreferencesSettingsActivity.bindPreferenceSummaryToValue(findPreference("PinCodeKey"));
+
+        final CheckBoxPreference fingerPrintPreference = (CheckBoxPreference) findPreference("FingerPrintKey");
+        fingerPrintPreference.setEnabled(false);
+
+        if (Hi.isFingerPrintHardwareDetected()) {
+            fingerPrintPreference.setEnabled(true);
+        }
+
+        fingerPrintPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object value) {
+
+                boolean newState = (boolean) value;
+
+                boolean outputState = true;
+                if (newState) {
+                    if (Hi.isFingerPrintsHasEnrolled()) {
+                        //show fingerPrint layout for sign up
+                        return newState;
+                    } else {
+                        Toast.makeText(getActivity(), "کاربر گرامی، شما می بایست برای استفاده از این امکان اثر انگشت خود را از قسمت تنظیمات گوشی ثبت نمایید.", Toast.LENGTH_SHORT).show();
+                        return !newState;
+                    }
+                } else {
+                    return !newState;
+                }
+
+            }
+        });
+
+
+        // PreferencesSettingsActivity.bindPreferenceSummaryToValue(findPreference("FingerPrintKey"));
+        //PreferencesSettingsActivity.bindPreferenceSummaryToValue(findPreference("PinCodeKey"));
+
+        /*
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String strUserName = SP.getString("username", "NA");
+        boolean bAppUpdates = SP.getBoolean("applicationUpdates",false);
+        String downloadType = SP.getString("downloadType","1");
+        */
 
     }
 
