@@ -1,5 +1,6 @@
 package com.atahmasebian.prefrences.preference;
 
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -11,10 +12,13 @@ import android.widget.Toast;
 
 import com.atahmasebian.prefrences.Hi;
 import com.atahmasebian.prefrences.R;
+import com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag;
 import com.atahmasebian.prefrences.activity.MainActivity;
 
 
 public class SecuritySettingPreferenceFragment extends PreferenceFragment {
+
+    public static final int PinCodeConfirmed = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,8 +78,6 @@ public class SecuritySettingPreferenceFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object value) {
                 boolean isChecked = (boolean) value;
-
-
                 if (isChecked) {
                     fingerPrintPreference.setChecked(false);
                     fingerPrintPreference.setEnabled(false);
@@ -83,6 +85,7 @@ public class SecuritySettingPreferenceFragment extends PreferenceFragment {
                     checkPinCodeValidation();
                 } else {
                     fingerPrintPreference.setEnabled(true);
+                    Hi.setLoginValidationType(Hi.USERPASS_LOGIN_TYPE);
                 }
                 return true;
             }
@@ -106,11 +109,33 @@ public class SecuritySettingPreferenceFragment extends PreferenceFragment {
     private void checkPinCodeValidation() {
         String pinCode = MainActivity.userData.getString("PinCode");
         if (pinCode != null && !pinCode.isEmpty()) {
-            Hi.setLoginValidationType(Hi.FINGERPRINT_LOGIN_TYPE);
-        }else {
+            Hi.setLoginValidationType(Hi.PINCODE_LOGIN_TYPE);
+            Toast.makeText(getActivity(), "ورود با پین کد فعال شد", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
 
-            //go to pin code insert fragment
+            Bundle data = new Bundle();
+            data.putString(AccountGeneralTag.ARG_ACCOUNT_NAME, "cpuman");
+            data.putString(AccountGeneralTag.ARG_AUTH_TYPE, getString(R.string.auth_type));
+            data.putString(AccountGeneralTag.PARAM_USER_PASS, "a1234567");
+
+
+            //set customize out  data
+            Bundle userData = new Bundle();
+            userData.putString("UserID", "25");
+            data.putBundle(AccountManager.KEY_USERDATA, userData);
+            intent.putExtras(data);
+
+            startActivityForResult(intent, PinCodeConfirmed);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PinCodeConfirmed) {
+            Toast.makeText(getActivity(), "pinCode is confirm for new login type", Toast.LENGTH_SHORT).show();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

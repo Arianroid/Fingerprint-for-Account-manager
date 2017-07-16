@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.atahmasebian.prefrences.Hi;
 import com.atahmasebian.prefrences.R;
 import com.atahmasebian.prefrences.accountAuthentication.AccountGeneralTag;
 import com.atahmasebian.prefrences.preference.PreferencesSettingsActivity;
@@ -38,14 +39,19 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = (EditText) findViewById(R.id.etUsername);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         authTokenType = getString(R.string.auth_type);
-
         mAccountManager = AccountManager.get(getBaseContext());
         Account account = findAccount();
 
-        if (account != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra(ACCOUNT_DTO,account);
-            startActivityForResult(intent, CANCEL_FINGERPRINT_REQUEST_CODE);
+
+        if (Hi.getLoginValidationType()==Hi.FINGERPRINT_LOGIN_TYPE
+                ||Hi.getLoginValidationType()==Hi.PINCODE_LOGIN_TYPE) {
+
+
+            if (account != null) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra(ACCOUNT_DTO, account);
+                startActivityForResult(intent, CANCEL_FINGERPRINT_REQUEST_CODE);
+            }
         }
 
 
@@ -62,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 data.putString(AccountGeneralTag.ARG_ACCOUNT_NAME, username);
                 data.putString(AccountGeneralTag.ARG_AUTH_TYPE, authTokenType);
                 data.putString(AccountGeneralTag.PARAM_USER_PASS, password);
-
 
                 //set customize out  data
                 Bundle userData = new Bundle();
@@ -89,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.more) {
             startActivity(new Intent(this, PreferencesSettingsActivity.class));
-
         }
         return true;
     }

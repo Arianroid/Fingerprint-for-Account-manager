@@ -12,6 +12,7 @@ public class Hi extends Application {
 
     public static final int PINCODE_LOGIN_TYPE = 88;
     public static final int FINGERPRINT_LOGIN_TYPE = 77;
+    public static final int USERPASS_LOGIN_TYPE = 66;
     public static final String LOGIN_TYPE = "loginType";
     static Context context;
     private static FingerprintManager fingerprintManager;
@@ -45,6 +46,9 @@ public class Hi extends Application {
                 break;
             case FINGERPRINT_LOGIN_TYPE:
                 editor.putInt(LOGIN_TYPE, FINGERPRINT_LOGIN_TYPE);
+                break;
+            case USERPASS_LOGIN_TYPE:
+                editor.putInt(LOGIN_TYPE,USERPASS_LOGIN_TYPE);
                 break;
         }
         editor.apply();

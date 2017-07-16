@@ -56,7 +56,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
 
     public final static int VALIDATION_FINGERPRINT_REQUEST_CODE = 2;
     private static final String KEY_NAME = "androidHive";
-    public static AccountManager mAccountManager;
+    public static AccountManager mAccountManager ;
     public static InsertInsertPinCodeFragment insertPinCodeFragment;
     public static ConfirmPinCodeFragmentPinCode confirmPinCodeFragment;
     public static Account staticAccount;
