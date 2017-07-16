@@ -26,6 +26,8 @@ public class InsertInsertPinCodeFragment extends Fragment implements IInsertPinC
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
             int id = textView.getId();
+
+
             switch (id) {
                 case R.id.etPinCodeFirstTxt:
                     etSecondTxt.requestFocus();
@@ -54,7 +56,7 @@ public class InsertInsertPinCodeFragment extends Fragment implements IInsertPinC
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.length()>0) {
+            if (s.length() > 0) {
                 etFirstTxt.onEditorAction(EditorInfo.IME_ACTION_GO);
             }
         }
@@ -73,8 +75,10 @@ public class InsertInsertPinCodeFragment extends Fragment implements IInsertPinC
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.length()>0) {
+            if (s.length() > 0) {
                 etSecondTxt.onEditorAction(EditorInfo.IME_ACTION_GO);
+            } else if (etSecondTxt.getText().toString().length() <= 0) {
+                etFirstTxt.requestFocus();
             }
         }
 
@@ -92,8 +96,30 @@ public class InsertInsertPinCodeFragment extends Fragment implements IInsertPinC
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.length()>0) {
+            if (s.length() > 0) {
                 etThirdTxt.onEditorAction(EditorInfo.IME_ACTION_GO);
+            } else if (etThirdTxt.getText().toString().length() <= 0) {
+                etSecondTxt.requestFocus();
+            }
+        }
+
+
+    };
+    private TextWatcher textWatcher4 = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (etFourthTxt.getText().toString().length() <= 0) {
+                etThirdTxt.requestFocus();
             }
         }
 

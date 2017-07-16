@@ -13,7 +13,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.atahmasebian.prefrences.R;
 import com.atahmasebian.prefrences.activity.MainActivity;
@@ -27,6 +26,7 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
             int id = textView.getId();
+
             switch (id) {
                 case R.id.confirmFirstEditText:
                     secondEdittext.requestFocus();
@@ -37,14 +37,12 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
                 case R.id.confirmThirdEditText:
                     fourthEditText.requestFocus();
                     break;
-                case R.id.confirmFourhEditText:
-                    //dologi
-                    break;
             }
 
             return true;
         }
     };
+
     private boolean isConfirmLayoutShown = false;
     private TextWatcher textWatcher1 = new TextWatcher() {
         @Override
@@ -61,6 +59,8 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
         public void afterTextChanged(Editable s) {
             if (s.length() > 0) {
                 firstEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            } else if (firstEdittext.getText().toString().length() <= 0) {
+                //do nothing
             }
         }
 
@@ -80,6 +80,8 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
         public void afterTextChanged(Editable s) {
             if (s.length() > 0) {
                 secondEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            } else if (secondEdittext.getText().toString().length() <= 0) {
+                firstEdittext.requestFocus();
             }
         }
 
@@ -99,6 +101,8 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
         public void afterTextChanged(Editable s) {
             if (s.length() > 0) {
                 thirdEdittext.onEditorAction(EditorInfo.IME_ACTION_GO);
+            } else if (thirdEdittext.getText().toString().length() <= 0) {
+                secondEdittext.requestFocus();
             }
         }
 
@@ -120,10 +124,13 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
                 if (!MainActivity.isPinCodeConfirm()) {
                     showExceptionLayout();
                 }
+            } else if (fourthEditText.getText().toString().length() <= 0) {
+                thirdEdittext.requestFocus();
             }
         }
 
     };
+
 
     @Nullable
     @Override
@@ -150,7 +157,6 @@ public class ConfirmPinCodeFragmentPinCode extends Fragment implements IConfirmP
             showConfirmPinCodeUi();
         } else showLoginwithPinCodeUi();
         return view;
-
     }
 
     @Override
