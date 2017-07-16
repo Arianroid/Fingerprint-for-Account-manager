@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.atahmasebian.prefrences.Hi;
 import com.atahmasebian.prefrences.R;
+import com.atahmasebian.prefrences.activity.MainActivity;
 
 
 public class SecuritySettingPreferenceFragment extends PreferenceFragment {
@@ -23,45 +24,93 @@ public class SecuritySettingPreferenceFragment extends PreferenceFragment {
 
 
         final CheckBoxPreference fingerPrintPreference = (CheckBoxPreference) findPreference("FingerPrintKey");
+        final CheckBoxPreference pinCodePreference = (CheckBoxPreference) findPreference("PinCodeKey");
+
+
         fingerPrintPreference.setEnabled(false);
 
         if (Hi.isFingerPrintHardwareDetected()) {
             fingerPrintPreference.setEnabled(true);
         }
 
+        if (Hi.isFingerPrintsHasEnrolled() && fingerPrintPreference.isChecked()) {
+            pinCodePreference.setEnabled(false);
+            pinCodePreference.setChecked(false);
+        } else pinCodePreference.setEnabled(true);
+
+        if (pinCodePreference.isChecked()) {
+            fingerPrintPreference.setEnabled(false);
+            fingerPrintPreference.setChecked(false);
+        }
+
         fingerPrintPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object value) {
 
-                boolean newState = (boolean) value;
+                boolean visibile = (boolean) value;
 
-                boolean outputState = true;
-                if (newState) {
+                if (visibile) {
                     if (Hi.isFingerPrintsHasEnrolled()) {
+                        //disable pinCode checkbox
+                        pinCodePreference.setEnabled(false);
+                        pinCodePreference.setChecked(false);
+
                         //show fingerPrint layout for sign up
-                        return newState;
+
+                        return visibile;
                     } else {
                         Toast.makeText(getActivity(), "کاربر گرامی، شما می بایست برای استفاده از این امکان اثر انگشت خود را از قسمت تنظیمات گوشی ثبت نمایید.", Toast.LENGTH_SHORT).show();
-                        return !newState;
+                        return !visibile;
                     }
                 } else {
-                    return !newState;
+                    return !visibile;
                 }
 
             }
         });
 
 
-        // PreferencesSettingsActivity.bindPreferenceSummaryToValue(findPreference("FingerPrintKey"));
+        pinCodePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object value) {
+                boolean isChecked = (boolean) value;
+
+
+                if (isChecked) {
+                    fingerPrintPreference.setChecked(false);
+                    fingerPrintPreference.setEnabled(false);
+
+                    checkPinCodeValidation();
+                } else {
+                    fingerPrintPreference.setEnabled(true);
+                }
+                return true;
+            }
+
+
+        });
+
+
+        //PreferencesSettingsActivity.bindPreferenceSummaryToValue(findPreference("FingerPrintKey"));
         //PreferencesSettingsActivity.bindPreferenceSummaryToValue(findPreference("PinCodeKey"));
 
-        /*
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        /*SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String strUserName = SP.getString("username", "NA");
         boolean bAppUpdates = SP.getBoolean("applicationUpdates",false);
-        String downloadType = SP.getString("downloadType","1");
-        */
+        String downloadType = SP.getString("downloadType","1");*/
 
+
+    }
+
+    private void checkPinCodeValidation() {
+        String pinCode = MainActivity.userData.getString("PinCode");
+        if (pinCode != null && !pinCode.isEmpty()) {
+            Hi.setLoginValidationType(Hi.FINGERPRINT_LOGIN_TYPE);
+        }else {
+
+            //go to pin code insert fragment
+        }
     }
 
     @Override

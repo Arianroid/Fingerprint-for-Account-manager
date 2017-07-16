@@ -60,7 +60,7 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
     public static InsertInsertPinCodeFragment insertPinCodeFragment;
     public static ConfirmPinCodeFragmentPinCode confirmPinCodeFragment;
     public static Account staticAccount;
-    private static Bundle userData = new Bundle();
+    public static Bundle userData = new Bundle();
     public final int VALIDATION_PinCode_REQUEST_CODE = 3;
     private KeyStore keyStore;
     private Cipher cipher;
