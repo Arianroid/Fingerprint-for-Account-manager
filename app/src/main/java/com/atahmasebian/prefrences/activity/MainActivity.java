@@ -196,12 +196,14 @@ public class MainActivity extends AccountAuthenticatorActivity implements IFinge
                 transaction.replace(R.id.outputFragment, confirmPinCodeFragment);
                 transaction.commit();
                 userData.putString("PinCode", insertPinCodeFragment.getPinCode());
+                confirmPinCodeFragment.setShownConfirmLayout(true);
 
                 break;
             case R.id.confirmBtn:
                 //set pin code user data to bundle AM
                 if (isPinCodeConfirm()) {
                     userSignIn();
+
                 } else {
                     Toast.makeText(this, "pin code is not equal", Toast.LENGTH_SHORT).show();
                 }

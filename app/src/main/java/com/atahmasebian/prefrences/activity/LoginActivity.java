@@ -110,18 +110,25 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode==VALIDATION_PinCode_REQUEST_CODE){
+        if (resultCode==VALIDATION_PinCode_REQUEST_CODE||resultCode==-1){
             Toast.makeText(this, "login With pinCode", Toast.LENGTH_SHORT).show();
+            Hi.setLoginValidationType(Hi.PINCODE_LOGIN_TYPE);
+
             return;
         }
         if (requestCode == CANCEL_FINGERPRINT_REQUEST_CODE && resultCode == -1) {
             Toast.makeText(this, "finger print save in am ", Toast.LENGTH_SHORT).show();
+            Hi.setLoginValidationType(Hi.FINGERPRINT_LOGIN_TYPE);
+
         }
         if (requestCode == VALIDATION_FINGERPRINT_REQUEST_CODE) {
+            Hi.setLoginValidationType(Hi.FINGERPRINT_LOGIN_TYPE);
             Toast.makeText(this, "finger print is valid plz doLogin ", Toast.LENGTH_SHORT).show();
         }
         if (requestCode == CANCEL_FINGERPRINT_REQUEST_CODE) {
             Toast.makeText(this, "finger print is canceld ! ", Toast.LENGTH_SHORT).show();
+            Hi.setLoginValidationType(Hi.USERPASS_LOGIN_TYPE);
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);

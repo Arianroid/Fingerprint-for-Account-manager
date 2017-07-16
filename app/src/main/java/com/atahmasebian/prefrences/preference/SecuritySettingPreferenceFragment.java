@@ -27,8 +27,8 @@ public class SecuritySettingPreferenceFragment extends PreferenceFragment {
         setHasOptionsMenu(true);
 
 
-        final CheckBoxPreference fingerPrintPreference = (CheckBoxPreference) findPreference("FingerPrintKey");
-        final CheckBoxPreference pinCodePreference = (CheckBoxPreference) findPreference("PinCodeKey");
+        final CheckBoxPreference fingerPrintPreference = (CheckBoxPreference) findPreference(Hi.FINGERPRINT_KEY);
+        final CheckBoxPreference pinCodePreference = (CheckBoxPreference) findPreference(Hi.PINCODE_KEY);
 
 
         fingerPrintPreference.setEnabled(false);
