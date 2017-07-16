@@ -84,7 +84,9 @@ public class SecuritySettingPreferenceFragment extends PreferenceFragment {
 
                     checkPinCodeValidation();
                 } else {
-                    fingerPrintPreference.setEnabled(true);
+                    if (Hi.isFingerPrintHardwareDetected()) {
+                        fingerPrintPreference.setEnabled(true);
+                    }
                     Hi.setLoginValidationType(Hi.USERPASS_LOGIN_TYPE);
                 }
                 return true;

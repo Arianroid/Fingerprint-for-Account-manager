@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">تنظیمات تستی </string>
-    <string name="pref_title_secure_setting"> SecuritySetting </string>
+    <string name="pref_title_secure_setting"> تنظیمات امنیتی  </string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_secure">SecureSettingActivity</string>
 
